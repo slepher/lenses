@@ -22,10 +22,9 @@
                  fun((profunctor:profunctor(P, A, functor:functor(F, B))) ->
                             profunctor:profunctor(P, S, functor:functor(F, T))).
 iso(SA, BT) ->
-    %% type of functor:fmap(BT) is fun((functor:functor(F, B)) -> functor:functor(F, T)).
+    %% type of functor:fmap(BT) is f b -> f t
     %% type of SA is s -> a 
     %% so final type is p a (f b) -> p s (f t)
-    %                        profunctor:profunctor(P, S, functor:functor(F, T))).
     profunctor:dimap(SA, functor:fmap(BT)).
 
 %%--------------------------------------------------------------------
