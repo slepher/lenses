@@ -1,4 +1,9 @@
-# Lens 
+# Lenses
+
+Lenses is an erlang porting of haskell library Lens
+
+[lens](http://hackage.haskell.org/package/lens)
+
 
 ## Lens
 
@@ -19,7 +24,7 @@
     
 ## ISO
 
-    Iso s t a b = forall p f. (Profunctor p, Functor f) => p a (f b) -> p s (f t) 
+    type Iso s t a b = forall p f. (Profunctor p, Functor f) => p a (f b) -> p s (f t) 
     iso:iso(s -> a, b -> t) -> Iso s t a b
     
     Iso = iso:iso(fun(A) -> identity:run_identity(A) end, fun(A) -> identity:identity(A) end),
@@ -28,7 +33,7 @@
     
 ## Prism
 
-    Prism s t a b = forall p f. (Choice p, Applicative f) => p a (f b) -> p s (f t)
+    type Prism s t a b = forall p f. (Choice p, Applicative f) => p a (f b) -> p s (f t)
     prism:prism(b -> t, s -> Either t a) -> Prism s t a b
     
     -include_lib("erlando/include/op.hrl").
@@ -42,37 +47,37 @@
     
 ## Getter
 
-    Getting r s a = (a -> Const a b) -> (s -> Const r t)
+    type Getting r s a = (a -> Const r a) -> (s -> Const r s)
+    type Getter s a = forall r. Getting r s a
     getter:view(Getting a s a, s) -> a
     
 ## Fold
 
-    Fold r s a = (a -> Const [a] b) -> (s -> Const [a] t)
-    fold:to_list_of(Fold a s a, s) -> a
+    fold:to_list_of(Getting [a] s a, s) -> a
     
 ## Setter 
 
-    Setter s t a b = (a -> Identity b) -> (s -> Identity t)
+    type Setter s t a b = (a -> Identity b) -> (s -> Identity t)
     setter:over(Setter s t a b, a -> b, s) -> t
 
 ## TypeClass & Instances
 
-    Choice is Profucntor
-    Applicative is Functor
-    function (->) is an instance of Profunctor
-    Const r is an instance of Functor
-    Identity is an Instance of Functor
-    
-    Lens is Getter
-    Lens is Traversal
-    Traversal is Setter
-    Traversal is Fold
-    Iso is Lens
-    Iso is Prism
-    Prism is Traversal
-    Getter is Fold
+* function (->) is an instance of Profunctor
+* Const r is an instance of Functor
+* Identity is an Instance of Functor
+* Choice is Profucntor
+* Applicative is Functor
+* Lens is Getter
+* Lens is Traversal
+* Traversal is Setter
+* Traversal is Fold
+* Iso is Lens
+* Iso is Prism
+* Prism is Traversal
+* Getter is Fold
     
 ## Compose
 
-    Lens could be compose by . because
+Lenses could be compose by . because
+
     (p a (f b) -> p s (f t)) -> (p x (f y) -> p a (f b)) -> (p x (f y) -> p s (f t))
