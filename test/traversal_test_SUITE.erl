@@ -6,13 +6,12 @@
 %%% @end
 %%% Created : 20 Oct 2017 by Chen Slepher <slepheric@gmail.com>
 %%%-------------------------------------------------------------------
--module(prism_test_SUITE).
+-module(traversal_test_SUITE).
 
 -compile(export_all).
 
 -include_lib("eunit/include/eunit.hrl").
 -include_lib("common_test/include/ct.hrl").
--include_lib("erlando/include/op.hrl").
 
 %%--------------------------------------------------------------------
 %% @spec suite() -> Info
@@ -108,17 +107,14 @@ groups() ->
 %% @end
 %%--------------------------------------------------------------------
 all() -> 
-    [test_prism, test_compose_prism].
+    [test_traversal_setter].
 
 %%--------------------------------------------------------------------
 %% @spec TestCase() -> Info
 %% Info = [tuple()]
 %% @end
 %%--------------------------------------------------------------------
-test_prism() -> 
-    [].
-
-test_compose_prism() ->
+test_traversal_setter() -> 
     [].
 
 %%--------------------------------------------------------------------
@@ -130,23 +126,8 @@ test_compose_prism() ->
 %% Comment = term()
 %% @end
 %%--------------------------------------------------------------------
-test_prism(_Config) -> 
-    Prism = prism:prism(fun(A) -> {right, A} end, fun({right, A}) -> {right, A}; ({left, L}) -> {left, {left, L}} end),
-    ?assertEqual([1], fold:to_list_of(Prism, {right, 1})),
-    ?assertEqual({right, world}, setter:set(Prism, world, {right, hello})),
-    ?assertEqual({left, hello}, setter:set(Prism, world, {left, hello})),
+test_traversal_setter(_Config) -> 
+    Traversal = traversal:traverse(),
+    As = [1, 3],
+    ?assertEqual([2, 4], setter:over(Traversal, fun(A) -> A + 1 end, As)),
     ok.
-
-test_compose_prism(_Config) ->
-    Prism = prism:prism(fun(A) -> {cat, A} end, fun({cat, A}) -> {right, A}; (Other) -> {left, Other} end),
-
-    Traverse = fun(AFB) -> fun(S) -> list_instance:traverse(AFB, S) end end,
-    Compose = Traverse /'.'/ Prism,
-    CatsAndDogs = [{cat, kitty}, {dog, snoopy}, {cat, coffee}],
-    ?assertEqual([kitty, coffee], fold:to_list_of(Compose, CatsAndDogs)),
-    ?assertEqual([{cat, {my, kitty}}, {dog, snoopy}, {cat, {my, coffee}}],
-                  setter:over(Compose, fun(Cat) -> {my, Cat} end, CatsAndDogs)),
-    ok.
-    
-    
-    
