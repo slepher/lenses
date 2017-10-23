@@ -4,7 +4,7 @@ Lenses is an erlang porting of haskell library Lens
 
 [lens](http://hackage.haskell.org/package/lens)
 
-just include servial functions currently, the rest will be added lager.
+just include servial functions currently, the rest will be added later.
 
 
 ## Lens
