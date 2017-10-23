@@ -3,4 +3,5 @@
   {vsn, "%%VSN%%"},
   {modules, []},
   {registered, []},
-  {applications, [kernel, stdlib, syntax_tools]}]}.
+  {mod, {lenses_app, []}},
+  {applications, [kernel, stdlib, syntax_tools, erlando]}]}.

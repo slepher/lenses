@@ -4,21 +4,52 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 20 Oct 2017 by Chen Slepher <slepheric@gmail.com>
+%%% Created : 23 Oct 2017 by Chen Slepher <slepheric@gmail.com>
 %%%-------------------------------------------------------------------
--module(fold).
+-module(lenses_function).
+
+-include_lib("erlando/include/op.hrl").
+
+-behaviour(type).
+-behaviour(profunctor).
+-behaviour(choice).
 
 %% API
--export([to_list_of/2, fold_map_of/3]).
-
+-export([type/0]).
+% profunctor instance
+-export([lmap/1, rmap/1, dimap/2]).
+% choice instance
+-export([left/1, right/1]).
 %%%===================================================================
 %%% API
 %%%===================================================================
-to_list_of(Fold, S) ->
-    undetermined:run(const:run_const((Fold(fun(A) -> const:const([A]) end))(S)), list_instance).
+type() ->
+    function.
 
-fold_map_of(Fold, AR, S) ->
-    const:run_const((Fold(fun(A) -> const:const(AR(A)) end))(S)).
+dimap(AB, CD) ->
+    fun(BC) ->
+            CD /'.'/ BC /'.'/ AB
+    end.
+
+lmap(AB) ->
+    fun(BC) ->
+         BC /'.'/ AB
+    end.
+
+rmap(BC) ->
+    fun(AB) ->
+            BC /'.'/ AB
+    end.
+
+right(PAB) ->
+    fun({right, A}) ->
+            {right, PAB(A)};
+       ({left, C}) ->
+            {left, C}
+    end.
+
+left(PAB) ->
+    choice:default_left(PAB, ?MODULE).
 
 %%--------------------------------------------------------------------
 %% @doc

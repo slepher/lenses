@@ -4,21 +4,38 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 20 Oct 2017 by Chen Slepher <slepheric@gmail.com>
+%%% Created : 19 Oct 2017 by Chen Slepher <slepheric@gmail.com>
 %%%-------------------------------------------------------------------
--module(fold).
+-module(choice).
+
+-callback left(any()) -> any().
+-callback right(any()) -> any().
 
 %% API
--export([to_list_of/2, fold_map_of/3]).
+-export([left/1, right/1]).
+-export([default_left/2, default_right/2]).
 
 %%%===================================================================
 %%% API
 %%%===================================================================
-to_list_of(Fold, S) ->
-    undetermined:run(const:run_const((Fold(fun(A) -> const:const([A]) end))(S)), list_instance).
 
-fold_map_of(Fold, AR, S) ->
-    const:run_const((Fold(fun(A) -> const:const(AR(A)) end))(S)).
+left(UAB) ->
+    undetermined:map(
+      fun(Module, PAB) ->
+              Module:left(PAB)
+      end, UAB, ?MODULE).
+
+right(UAB) ->
+    undetermined:map(
+      fun(Module, PAB) ->
+              Module:right(PAB)
+      end, UAB, ?MODULE).
+
+default_left(PAB, Module) ->
+    (Module:dimap(either:swap(), either:swap()))(Module:right(PAB)).
+
+default_right(PAB, Module) ->
+    (Module:dimap(either:swap(), either:swap()))(Module:left(PAB)).
 
 %%--------------------------------------------------------------------
 %% @doc
