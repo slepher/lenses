@@ -16,7 +16,7 @@
 %%%===================================================================
 over(Setter, AB, S) ->
     AFB = fun(A) -> identity:identity(AB(A)) end,
-    identity:run_identity((Setter(AFB))(S)).
+    identity:run((Setter(AFB))(S)).
 
 set(Setter, B, S) ->
     over(Setter, function_instance:const(B), S).
