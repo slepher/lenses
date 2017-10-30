@@ -128,7 +128,7 @@ test_iso_setter() ->
 %% @end
 %%--------------------------------------------------------------------
 test_iso_setter(_Config) -> 
-    Iso = iso:iso(fun(A) -> identity:run_identity(A) end, fun(A) -> identity:identity(A) end),
+    Iso = iso:iso(fun(A) -> identity:run(A) end, fun(A) -> identity:identity(A) end),
     ?assertEqual(3, getter:view(Iso, {identity, 3})),
     ?assertEqual({identity, 1}, setter:set(Iso, 1, {identity, 3})),
     ok.
