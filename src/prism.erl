@@ -27,7 +27,7 @@ prism(BT, SETA) ->
     %% dimap(SETA, either) :: p (Either t a) (Either t (f b)) -> p s -> f t
     %% right :: p a (f b) -> p (Either t a) (Either t (f b))
     %% final type is p a (f b) -> p s (f t)
-    profunctor:dimap(SETA, either:either(applicative:pure(_), functor:fmap(BT))) /'.'/ choice:right(_).
+    profunctor:dimap(SETA, either:either(applicative:pure(_), functor:fmap(BT, _))) /'.'/ choice:right(_).
 %%--------------------------------------------------------------------
 %% @doc
 %% @spec

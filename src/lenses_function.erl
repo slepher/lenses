@@ -8,47 +8,49 @@
 %%%-------------------------------------------------------------------
 -module(lenses_function).
 
+-erlando_type(function). 
+
 -include_lib("erlando/include/op.hrl").
 
--behaviour(type).
 -behaviour(profunctor).
 -behaviour(choice).
 
+-define(TYPE, function).
+
 %% API
--export([type/0]).
 % profunctor instance
--export([lmap/1, rmap/1, dimap/2]).
+-export([dimap/3, lmap/2, rmap/2]).
 % choice instance
--export([left/1, right/1]).
+-export([left/2, right/2]).
+
+-transform_behaviour({?MODULE, [], [?TYPE], [profunctor, choice]}).
+
 %%%===================================================================
 %%% API
 %%%===================================================================
-type() ->
-    function.
-
-dimap(AB, CD) ->
+dimap(AB, CD, ?TYPE) ->
     fun(BC) ->
             CD /'.'/ BC /'.'/ AB
     end.
 
-lmap(AB) ->
+lmap(AB, ?TYPE) ->
     fun(BC) ->
          BC /'.'/ AB
     end.
 
-rmap(BC) ->
+rmap(BC, ?TYPE) ->
     fun(AB) ->
             BC /'.'/ AB
     end.
 
-right(PAB) ->
+right(PAB, ?TYPE) ->
     fun({right, A}) ->
             {right, PAB(A)};
        ({left, C}) ->
             {left, C}
     end.
 
-left(PAB) ->
+left(PAB, ?TYPE) ->
     choice:default_left(PAB, ?MODULE).
 
 %%--------------------------------------------------------------------

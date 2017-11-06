@@ -25,7 +25,7 @@ iso(SA, BT) ->
     %% type of functor:fmap(BT) is f b -> f t
     %% type of SA is s -> a 
     %% so final type is p a (f b) -> p s (f t)
-    profunctor:dimap(SA, functor:fmap(BT)).
+    profunctor:dimap(SA, functor:fmap(BT, _)).
 
 %%--------------------------------------------------------------------
 %% @doc

@@ -8,34 +8,39 @@
 %%%-------------------------------------------------------------------
 -module(choice).
 
--callback left(any()) -> any().
--callback right(any()) -> any().
+-superclass([profunctor]).
+
+-callback left(any(), _P) -> any().
+-callback right(any(), _P) -> any().
+
+-compile({parse_transform, monad_t_transform}).
 
 %% API
--export([left/1, right/1]).
+-export([left/2, right/2]).
 -export([default_left/2, default_right/2]).
+
+-transform({?MODULE, [?MODULE], [left/1, right/1]}).
 
 %%%===================================================================
 %%% API
 %%%===================================================================
-
-left(UAB) ->
+left(UAB, UChoice) ->
     undetermined:map(
-      fun(Module, PAB) ->
-              Module:left(PAB)
-      end, UAB, ?MODULE).
+      fun(Choice, PAB) ->
+              typeclass_trans:apply(left, [PAB], Choice, ?MODULE)
+      end, UAB, UChoice).
 
-right(UAB) ->
+right(UAB, UChoice) ->
     undetermined:map(
-      fun(Module, PAB) ->
-              Module:right(PAB)
-      end, UAB, ?MODULE).
+      fun(Choice, PAB) ->
+              typeclass_trans:apply(right, [PAB], Choice, ?MODULE)
+      end, UAB, UChoice).
 
-default_left(PAB, Module) ->
-    (Module:dimap(either:swap(), either:swap()))(Module:right(PAB)).
+default_left(PAB, Choice) ->
+    (profunctor:dimap(either:swap(), either:swap()))(right(PAB, Choice), Choice).
 
-default_right(PAB, Module) ->
-    (Module:dimap(either:swap(), either:swap()))(Module:left(PAB)).
+default_right(PAB, Choice) ->
+    (profunctor:dimap(either:swap(), either:swap()))(left(PAB, Choice), Choice).
 
 %%--------------------------------------------------------------------
 %% @doc
