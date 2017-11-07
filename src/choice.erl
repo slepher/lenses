@@ -10,8 +10,12 @@
 
 -superclass([profunctor]).
 
--callback left(any(), _P) -> any().
--callback right(any(), _P) -> any().
+-export_type([choice/3]).
+
+-type choice(_P, _A, _B) :: any().
+
+-callback left(choice(P, A, B), P) -> choice(P, either:either(A, C), either:either(B, C)).
+-callback right(choice(P, A, B), P) -> choice(P, either:either(C, A), either:either(C, B)).
 
 -compile({parse_transform, monad_t_transform}).
 
@@ -19,7 +23,7 @@
 -export([left/2, right/2]).
 -export([default_left/2, default_right/2]).
 
--transform({?MODULE, [?MODULE], [left/1, right/1]}).
+-transform(#{args => [?MODULE], functions => [left/1, right/1]}).
 
 %%%===================================================================
 %%% API

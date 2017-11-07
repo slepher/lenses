@@ -24,7 +24,7 @@
 -export([dimap/3, lmap/2, rmap/2]).
 -export([default_dimap/3, default_lmap/2, default_rmap/2]).
 
--transform({?MODULE, [?MODULE], [dimap/2, lmap/1, rmap/1]}).
+-transform(#{args => [?MODULE], functions => [dimap/2, lmap/1, rmap/1]}).
 
 %%%===================================================================
 %%% API

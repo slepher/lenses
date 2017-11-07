@@ -23,7 +23,8 @@
 % choice instance
 -export([left/2, right/2]).
 
--transform_behaviour({?MODULE, [], [?TYPE], [profunctor, choice]}).
+% this generates functions [dimap/2, lmap/1, rmap/1, left/1, right/1].
+-transform(#{args => [?TYPE], behaviours => [profunctor, choice]}).
 
 %%%===================================================================
 %%% API
@@ -51,7 +52,7 @@ right(PAB, ?TYPE) ->
     end.
 
 left(PAB, ?TYPE) ->
-    choice:default_left(PAB, ?MODULE).
+    choice:default_left(PAB, ?TYPE).
 
 %%--------------------------------------------------------------------
 %% @doc
