@@ -10,6 +10,8 @@
 
 -erlando_type(function). 
 
+-compile({parse_transform, monad_t_transform}).
+
 -include_lib("erlando/include/op.hrl").
 
 -behaviour(profunctor).
@@ -29,31 +31,35 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
+-spec dimap((fun((A) -> B)), fun((C) -> D), function) -> fun((fun((B) -> C)) -> fun((A) -> D)).
 dimap(AB, CD, ?TYPE) ->
     fun(BC) ->
             CD /'.'/ BC /'.'/ AB
     end.
 
+-spec lmap(fun((A) -> B), function) -> fun((fun((B) -> C)) -> fun((A) -> C)).
 lmap(AB, ?TYPE) ->
     fun(BC) ->
          BC /'.'/ AB
     end.
 
+-spec rmap(fun((B) -> C), function) -> fun((fun((A) -> B)) -> fun((A) -> C)).
 rmap(BC, ?TYPE) ->
     fun(AB) ->
             BC /'.'/ AB
     end.
 
+-spec left(fun((A) -> B), function) -> fun((either:either(A, C)) -> either:either(B, C)).
+left(PAB, ?TYPE) ->
+    choice:default_left(PAB, ?TYPE).
+
+-spec right(fun((A) -> B), function) -> fun((either:either(C, A)) -> either:either(C, B)).
 right(PAB, ?TYPE) ->
     fun({right, A}) ->
             {right, PAB(A)};
        ({left, C}) ->
             {left, C}
     end.
-
-left(PAB, ?TYPE) ->
-    choice:default_left(PAB, ?TYPE).
-
 %%--------------------------------------------------------------------
 %% @doc
 %% @spec

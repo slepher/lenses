@@ -18,9 +18,7 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
--spec iso(fun((S) -> A), fun((B) -> T)) -> 
-                 fun((profunctor:profunctor(P, A, functor:functor(F, B))) ->
-                            profunctor:profunctor(P, S, functor:functor(F, T))).
+-spec iso(fun((S) -> A), fun((B) -> T)) -> fun((profunctor:p(P, A, functor:f(F, B))) -> profunctor:p(P, S, functor:f(F, T))).
 iso(SA, BT) ->
     %% type of functor:fmap(BT) is f b -> f t
     %% type of SA is s -> a 

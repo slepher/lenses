@@ -10,13 +10,13 @@
 
 -superclass([]).
 
--export_type([profunctor/3]).
+-export_type([p/3]).
 
--type profunctor(_P, _A, _B) :: any().
+-type p(_P, _A, _B) :: any().
 
--callback lmap(fun((A) -> B), P) -> fun((profunctor(P, B, C)) -> profunctor(P, A, C)).
--callback rmap(fun((B) -> C), P) -> fun((profunctor(P, A, B)) -> profunctor(P, A, C)).
--callback dimap((fun((A) -> B)), fun((C) -> D), P) -> fun((profunctor(P, B, C)) -> profunctor(P, A, D)).
+-callback dimap((fun((A) -> B)), fun((C) -> D), P) -> fun((profunctor:p(P, B, C)) -> profunctor:p(P, A, D)).
+-callback lmap(fun((A) -> B), P) -> fun((profunctor:p(P, B, C)) -> profunctor:p(P, A, C)).
+-callback rmap(fun((B) -> C), P) -> fun((profunctor:p(P, A, B)) -> profunctor:p(P, A, C)).
 
 -compile({parse_transform, monad_t_transform}).
 
@@ -29,7 +29,7 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
-
+-spec dimap((fun((A) -> B)), fun((C) -> D), P) -> fun((profunctor:p(P, B, C)) -> profunctor:p(P, A, D)).
 dimap(AB, CD, UProfunctor) ->
     fun(UBC) ->
             undetermined:map(
@@ -38,6 +38,7 @@ dimap(AB, CD, UProfunctor) ->
               end, UBC, UProfunctor)
       end.
 
+-spec lmap(fun((A) -> B), P) -> fun((profunctor:p(P, B, C)) -> profunctor:p(P, A, C)).
 lmap(AB, UProfunctor) ->
     fun(UBC) ->
             undetermined:map(
@@ -46,6 +47,7 @@ lmap(AB, UProfunctor) ->
               end, UBC, UProfunctor)
     end.
 
+-spec rmap(fun((B) -> C), P) -> fun((profunctor:p(P, A, B)) -> profunctor:p(P, A, C)).
 rmap(BC, UProfunctor) ->
     fun(UAB) ->
             undetermined:map(

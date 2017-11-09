@@ -19,6 +19,8 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
+-spec prism(fun((B) -> T), fun((S) -> either:either(T, A))) -> 
+                   fun((choice:p(P, A, functor:f(F, B))) -> choice:p(P, S, functor:f(F, T))).
 prism(BT, SETA) ->
     %% functor:fmap(BT) :: f b -> f t
     %% applicative:pure(_) :: t -> f t

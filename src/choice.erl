@@ -10,12 +10,12 @@
 
 -superclass([profunctor]).
 
--export_type([choice/3]).
+-export_type([p/3]).
 
--type choice(_P, _A, _B) :: any().
+-type p(_P, _A, _B) :: any().
 
--callback left(choice(P, A, B), P) -> choice(P, either:either(A, C), either:either(B, C)).
--callback right(choice(P, A, B), P) -> choice(P, either:either(C, A), either:either(C, B)).
+-callback left(choice:p(P, A, B), P) -> choice:p(P, either:either(A, C), either:either(B, C)).
+-callback right(choice:p(P, A, B), P) -> choice:p(P, either:either(C, A), either:either(C, B)).
 
 -compile({parse_transform, monad_t_transform}).
 
@@ -28,12 +28,14 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
+-spec left(choice:p(P, A, B), P) -> choice:p(P, either:either(A, C), either:either(B, C)).
 left(UAB, UChoice) ->
     undetermined:map(
       fun(Choice, PAB) ->
               typeclass_trans:apply(left, [PAB], Choice, ?MODULE)
       end, UAB, UChoice).
 
+-spec right(choice:p(P, A, B), P) -> choice:p(P, either:either(C, A), either:either(C, B)).
 right(UAB, UChoice) ->
     undetermined:map(
       fun(Choice, PAB) ->
