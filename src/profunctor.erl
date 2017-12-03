@@ -18,13 +18,13 @@
 -callback lmap(fun((A) -> B), P) -> fun((profunctor:p(P, B, C)) -> profunctor:p(P, A, C)).
 -callback rmap(fun((B) -> C), P) -> fun((profunctor:p(P, A, B)) -> profunctor:p(P, A, C)).
 
--compile({parse_transform, monad_t_transform}).
+-compile({parse_transform, function_generator}).
 
 %% API
 -export([dimap/3, lmap/2, rmap/2]).
 -export([default_dimap/3, default_lmap/2, default_rmap/2]).
 
--transform(#{args => [?MODULE], functions => [dimap/2, lmap/1, rmap/1]}).
+-gen_fun(#{args => [?MODULE], functions => [dimap/2, lmap/1, rmap/1]}).
 
 %%%===================================================================
 %%% API

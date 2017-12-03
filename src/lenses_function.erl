@@ -10,7 +10,7 @@
 
 -erlando_type(function). 
 
--compile({parse_transform, monad_t_transform}).
+-compile({parse_transform, function_generator}).
 
 -include_lib("erlando/include/op.hrl").
 
@@ -26,7 +26,7 @@
 -export([left/2, right/2]).
 
 % this generates functions [dimap/2, lmap/1, rmap/1, left/1, right/1].
--transform(#{args => [?TYPE], behaviours => [profunctor, choice]}).
+-gen_fun(#{args => [?TYPE], behaviours => [profunctor, choice]}).
 
 %%%===================================================================
 %%% API

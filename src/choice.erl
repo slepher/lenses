@@ -17,13 +17,13 @@
 -callback left(choice:p(P, A, B), P) -> choice:p(P, either:either(A, C), either:either(B, C)).
 -callback right(choice:p(P, A, B), P) -> choice:p(P, either:either(C, A), either:either(C, B)).
 
--compile({parse_transform, monad_t_transform}).
+-compile({parse_transform, function_generator}).
 
 %% API
 -export([left/2, right/2]).
 -export([default_left/2, default_right/2]).
 
--transform(#{args => [?MODULE], functions => [left/1, right/1]}).
+-gen_fun(#{args => [?MODULE], functions => [left/1, right/1]}).
 
 %%%===================================================================
 %%% API
