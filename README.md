@@ -86,13 +86,17 @@ Lenses could be compose by . because
 
 ## MakeLenses
 
-    -compile({parse_transform, make_lenses}).
-    -record(state, {hello, world}).
-    -make_lenses([state, #{module => state}]).
-    
+```erlang
+-compile({parse_transform, make_lenses}).
+-record(state, {hello, world}).
+-make_lenses([state, #{module => state}]).
+```
+
 generates
 
-    state:hello/0
-    state:world/0
+```erlang
+state:hello/0
+state:world/0
+```
     
 which represents lenses of #state.hello, #state.world
