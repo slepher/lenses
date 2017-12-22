@@ -11,7 +11,7 @@
 -include_lib("erlando/include/op.hrl").
 
 %% API
--export([lens/2]).
+-export([lens/2, record/1]).
 
 %%%===================================================================
 %%% API
@@ -23,6 +23,11 @@ lens(Getter, Setter) ->
                     fun(B) -> Setter(S, B) end /'<$>'/ AFB(Getter(S))
             end
     end.
+
+record(Offset) ->
+    Getter = fun(R) -> element(Offset, R) end,
+    Setter = fun(R, A) -> setelement(Offset, R, A) end,
+    lens(Getter, Setter).
 %%--------------------------------------------------------------------
 %% @doc
 %% @spec
