@@ -50,12 +50,12 @@ make_lenses(Rec, RecOpts, Records, FormsAcc, OutDir) ->
     case maps:find(Rec, Records) of
         {ok, Fields} ->
             Module = maps:get(module, RecOpts, Rec),
+            ModuleForm = {attribute,1,module,Module},
+            Exports = {attribute, 2, export, lists:map(fun(Field) -> {Field, 0} end, Fields)},
             Functions = lists:map(
                           fun(N) ->
                                   generate_function(Rec, N, Fields, N + 2)
                           end, lists:seq(1, length(Fields))),
-            Exports = {attribute, 2, export, lists:map(fun(Field) -> {Field, 0} end, Fields)},
-            ModuleForm = {attribute,1,module,Module},
             Forms = [ModuleForm,Exports|Functions],
             {ok, Mod, Bin} = compile:forms(Forms, [debug_info, binary]),
             Filename = filename:join([OutDir, atom_to_list(Mod) ++ ".beam"]),
