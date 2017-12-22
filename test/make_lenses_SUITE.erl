@@ -142,4 +142,3 @@ test_make_lenses(_Config) ->
     ?assertEqual(#state{hello = new_hello, world = world}, setter:set(Hello, new_hello, State)),
     ?assertEqual(#state{hello = hello, world = new_world}, setter:set(World, new_world, State)),
     ok.
-

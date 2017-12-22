@@ -14,22 +14,27 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
-parse_transform(Forms, _Opts) ->
-    LensRecs = ast_traverse:attributes(make_lenses, Forms),
-    Records = get_records(Forms),
-    NLensRecs = 
-        lists:foldl(
-          fun([Rec, RecOpts], Acc) when is_atom(Rec) ->
-                  [{Rec, RecOpts}|Acc];
-             ([Rec], Acc) when is_atom(Rec) ->
-                  [{Rec, #{}}|Acc];
-             (_, Acc) ->
-                  Acc
-             end, [], LensRecs),
-    lists:foldl(
-      fun({Rec, RecOpts}, FormsAcc) ->
-              make_lenses(Rec, RecOpts, Records, FormsAcc)
-      end, Forms, NLensRecs).
+parse_transform(Forms, Opts) ->
+    case proplists:get_value(outdir, Opts) of
+        undefined ->
+            Forms;
+        OutDir ->
+            LensRecs = ast_traverse:attributes(make_lenses, Forms),
+            Records = get_records(Forms),
+            NLensRecs = 
+                lists:foldl(
+                  fun([Rec, RecOpts], Acc) when is_atom(Rec) ->
+                          [{Rec, RecOpts}|Acc];
+                     ([Rec], Acc) when is_atom(Rec) ->
+                          [{Rec, #{}}|Acc];
+                     (_, Acc) ->
+                          Acc
+                  end, [], LensRecs),
+            lists:foldl(
+              fun({Rec, RecOpts}, FormsAcc) ->
+                      make_lenses(Rec, RecOpts, Records, FormsAcc, OutDir)
+              end, Forms, NLensRecs)
+    end.
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -41,7 +46,7 @@ parse_transform(Forms, _Opts) ->
 %%% Internal functions
 %%%===================================================================
 
-make_lenses(Rec, RecOpts, Records, FormsAcc) ->
+make_lenses(Rec, RecOpts, Records, FormsAcc, OutDir) ->
     case maps:find(Rec, Records) of
         {ok, Fields} ->
             Module = maps:get(module, RecOpts, Rec),
@@ -53,7 +58,9 @@ make_lenses(Rec, RecOpts, Records, FormsAcc) ->
             ModuleForm = {attribute,1,module,Module},
             Forms = [ModuleForm,Exports|Functions],
             {ok, Mod, Bin} = compile:forms(Forms, [debug_info, binary]),
-            {module, Mod} = code:load_binary(Mod, [], Bin),
+            Filename = filename:join([OutDir, atom_to_list(Mod) ++ ".beam"]),
+            ok = file:write_file(Filename, Bin),
+            {module, Mod} = code:load_binary(Mod, Filename, Bin),
             FormsAcc;
         error ->
             FormsAcc
