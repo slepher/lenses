@@ -83,3 +83,16 @@ just include servial functions currently, the rest will be added later.
 Lenses could be compose by . because
 
     (p a (f b) -> p s (f t)) -> (p x (f y) -> p a (f b)) -> (p x (f y) -> p s (f t))
+
+## MakeLenses
+
+    -compile({parse_transform, make_lenses}).
+    -record(state, {hello, world}).
+    -make_lenses([state, #{module => state}]).
+    
+generates
+
+    state:hello/0
+    state:world/0
+    
+which represents lenses of #state.hello, #state.world
