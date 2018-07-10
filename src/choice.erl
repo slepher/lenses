@@ -43,10 +43,10 @@ right(UAB, UChoice) ->
       end, UAB, UChoice).
 
 default_left(PAB, Choice) ->
-    (profunctor:dimap(either:swap(), either:swap()))(right(PAB, Choice), Choice).
+    (profunctor:dimap(either:swap(), either:swap(), Choice))(right(PAB, Choice)).
 
 default_right(PAB, Choice) ->
-    (profunctor:dimap(either:swap(), either:swap()))(left(PAB, Choice), Choice).
+    (profunctor:dimap(either:swap(), either:swap(), Choice))(left(PAB, Choice)).
 
 %%--------------------------------------------------------------------
 %% @doc
