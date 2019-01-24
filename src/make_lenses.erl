@@ -15,7 +15,7 @@
 %%% API
 %%%===================================================================
 parse_transform(Forms, Opts) ->
-    LensLineRecs = ast_traverse:attributes_with_line(make_lenses, Forms),
+    LensLineRecs = astranaut:attributes_with_line(make_lenses, Forms),
     Records = get_records(Forms),
     NLensLineRecs = 
         lists:foldl(
@@ -97,7 +97,7 @@ lenses_forms(Rec, Records, Line) ->
     end.
 
 get_records(Forms) ->    
-    Recs = ast_traverse:attributes(record, Forms),
+    Recs = astranaut:attributes(record, Forms),
     lists:foldl(
       fun({RecName, Fields}, Acc) ->
               FieldNames = 

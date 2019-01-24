@@ -18,7 +18,7 @@
 -callback lmap(fun((A) -> B), P) -> fun((profunctor:p(P, B, C)) -> profunctor:p(P, A, C)).
 -callback rmap(fun((B) -> C), P) -> fun((profunctor:p(P, A, B)) -> profunctor:p(P, A, C)).
 
--compile({parse_transform, function_generator}).
+-include_lib("erlando/include/gen_fun.hrl").
 
 %% API
 -export([dimap/3, lmap/2, rmap/2]).

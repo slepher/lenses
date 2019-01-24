@@ -17,7 +17,7 @@
 -callback left(choice:p(P, A, B), P) -> choice:p(P, either:either(A, C), either:either(B, C)).
 -callback right(choice:p(P, A, B), P) -> choice:p(P, either:either(C, A), either:either(C, B)).
 
--compile({parse_transform, function_generator}).
+-include_lib("erlando/include/gen_fun.hrl").
 
 %% API
 -export([left/2, right/2]).

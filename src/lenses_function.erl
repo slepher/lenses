@@ -10,7 +10,7 @@
 
 -erlando_type(function). 
 
--compile({parse_transform, function_generator}).
+-include_lib("erlando/include/gen_fun.hrl").
 
 -include_lib("erlando/include/op.hrl").
 
