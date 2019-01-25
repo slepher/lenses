@@ -96,7 +96,7 @@ lenses_forms(Rec, Records, Line) ->
             {[], []}
     end.
 
-get_records(Forms) ->    
+get_records(Forms) ->
     Recs = astranaut:attributes(record, Forms),
     lists:foldl(
       fun({RecName, Fields}, Acc) ->
