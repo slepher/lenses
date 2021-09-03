@@ -1,6 +1,6 @@
 {application, lenses,
  [{description, "Lens for Erlang"},
-  {vsn, "0.3.5"}, 
+  {vsn, "0.4.0"},
   {modules, []},
   {registered, []},
   {applications, [kernel, stdlib, syntax_tools, erlando]}]}.

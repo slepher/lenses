@@ -15,7 +15,13 @@
 %%% API
 %%%===================================================================
 parse_transform(Forms, Opts) ->
-    LensLineRecs = astranaut:attributes_with_line(make_lenses, Forms),
+    LensLineRecs =
+        lists:foldl(
+          fun({attribute, Pos, make_lenses, LensesWithOpts}, Acc) ->
+                  [{Pos, LensesWithOpts}|Acc];
+             (_Form, Acc) ->
+                  Acc
+          end, [], Forms),
     Records = get_records(Forms),
     NLensLineRecs = 
         lists:foldl(
@@ -97,7 +103,7 @@ lenses_forms(Rec, Records, Line) ->
     end.
 
 get_records(Forms) ->
-    Recs = astranaut:attributes(record, Forms),
+    Recs = astranaut_lib:analyze_forms_attributes(record, Forms),
     lists:foldl(
       fun({RecName, Fields}, Acc) ->
               FieldNames = 
@@ -188,7 +194,6 @@ normal_field(Name) ->
 
 hide_field(Name) ->
     list_to_atom("_" ++ camelcase(Name)).
-
 
 camelcase(Name) ->
     string:join(
